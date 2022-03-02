@@ -2,14 +2,14 @@ export interface CredentialsStructure {
     environments: Environment[]
 }
 
-interface Environment {
+export interface Environment {
     name: string,
     orgId: string,
     baseUrl: string,
     users: User[]
 }
 
-interface User {
+export interface User {
     label: string,
     credentials: UserCredentials
 }

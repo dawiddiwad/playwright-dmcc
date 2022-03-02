@@ -1,5 +1,5 @@
 export enum Environment {
-    QA,
-    UAT,
-    PROD
+    QA = "QA",
+    UAT = "UAT",
+    PROD = "PROD"
 }

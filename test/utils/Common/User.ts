@@ -1,6 +1,6 @@
 export enum User {
-    SYSADMIN,
-    COMPLIANCE,
-    BSE,
-    RL
+    SYSADMIN = "SYSADMIN",
+    COMPLIANCE = "COMPLIANCE",
+    BSE = "BSE",
+    RL = "RL"
 }
