@@ -1,0 +1,16 @@
+{
+  "name": "playwright-dmcc",
+  "version": "1.0.0",
+  "description": "DMCC Freezone test automation framework",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dawid Dobrowolski SoftQA",
+  "license": "MIT",
+  "dependencies": {
+    "@playwright/test": "^1.19.2",
+    "@types/jsforce": "^1.9.41",
+    "ts-node": "^10.6.0",
+    "typescript": "^4.6.2"
+  }
+}
