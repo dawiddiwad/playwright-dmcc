@@ -13,10 +13,9 @@ export class SfdcUiCtx {
     public readonly environment: Environment;
 
 
-    constructor(environment: Environment, user: User){
+    constructor(environment: Environment, user: User) {
         this.environment = environment;
         this.user = user;
-
         this.Ready = new Promise(async (ready) => {
             this.credentialsHandler = await new CredentialsHandler().Ready;
             ready(this);
@@ -34,6 +33,6 @@ export class SfdcUiCtx {
     public async logoutFrom(page: Page): Promise<void> {
         const baseUrl: string = await this.credentialsHandler
             .environmentDataFor(this.environment).baseUrl;
-        await page.goto(`${baseUrl}/secur/logout.jsp`, {waitUntil: 'networkidle'});
+        await page.goto(`${baseUrl}/secur/logout.jsp`, { waitUntil: 'networkidle' });
     }
 }

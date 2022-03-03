@@ -8,6 +8,7 @@
   "author": "Dawid Dobrowolski SoftQA",
   "license": "MIT",
   "dependencies": {
+    "@faker-js/faker": "^6.0.0-alpha.7",
     "@playwright/test": "^1.19.2",
     "@types/jsforce": "^1.9.41",
     "ts-node": "^10.6.0",
