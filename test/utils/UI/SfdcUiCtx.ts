@@ -1,13 +1,12 @@
 import { Page } from "@playwright/test";
 import { LoginPage } from "../../locators/sfdc/LoginPage";
-import { CredentialsHandler } from "../Common/CredentialsHandler";
-import { UserCredentials } from "../Common/CredentialsStructure";
-import { Environment } from "../Common/Environment";
-import { SfCredentials } from "../Common/SfCredentials";
-import { User } from "../Common/User";
+import { UserCredentials } from "../common/credentials/structures/SalesforceCredentialsStructure";
+import { Environment } from "../common/credentials/structures/Environment";
+import { SalesforceCredentialsHandler } from "../common/credentials/SalesforceCredentialsHandler";
+import { User } from "../common/credentials/structures/User";
 
 export class SfdcUiCtx {
-    private credentials: SfCredentials;
+    private credentials: SalesforceCredentialsHandler;
 
     public Ready: Promise<SfdcUiCtx>;
     public readonly user: User;
@@ -18,7 +17,7 @@ export class SfdcUiCtx {
         this.environment = environment;
         this.user = user;
         this.Ready = new Promise(async (ready) => {
-            this.credentials = await new SfCredentials().Ready;
+            this.credentials = await new SalesforceCredentialsHandler().Ready;
             ready(this);
         })
     }

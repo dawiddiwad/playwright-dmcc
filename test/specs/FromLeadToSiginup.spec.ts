@@ -8,8 +8,8 @@ import { ListView } from "../locators/sfdc/ListView";
 import { Modal } from "../locators/sfdc/Modal";
 import { NavigationBar } from "../locators/sfdc/NavigationBar";
 import { StagesPath } from "../locators/sfdc/StagesPath";
-import { Environment } from "../utils/Common/Environment";
-import { User } from "../utils/Common/User";
+import { Environment } from "../utils/common/credentials/structures/Environment";
+import { User } from "../utils/common/credentials/structures/User";
 import { SfdcUiCtx } from "../utils/UI/SfdcUiCtx";
 
 test.describe('DMCC demo', () => {

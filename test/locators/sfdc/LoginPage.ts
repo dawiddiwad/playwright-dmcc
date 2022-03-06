@@ -1,5 +1,5 @@
 import { Page } from "@playwright/test";
-import { UserCredentials } from "../../utils/Common/CredentialsStructure";
+import { UserCredentials } from "../../utils/common/credentials/structures/SalesforceCredentialsStructure";
 
 export class LoginPage {
     public static readonly USERNAME: string = "//input[@id='username']";

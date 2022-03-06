@@ -1,6 +1,6 @@
-import { Environment } from "../Common/Environment";
-import { SfCredentials } from "../Common/SfCredentials";
-import { User } from "../Common/User";
+import { Environment } from "../common/credentials/structures/Environment";
+import { SalesforceCredentialsHandler } from "../common/credentials/SalesforceCredentialsHandler";
+import { User } from "../common/credentials/structures/User";
 
 (async() => {
     const username: string = process.argv[2];
@@ -10,9 +10,9 @@ import { User } from "../Common/User";
             username: ${username}
             password: ${password}`);
     }
-    await new SfCredentials().Ready
+    await new SalesforceCredentialsHandler().Ready
         .then(async handle => {
-            await handle.saveCredentialsToFileFor({username, password});
+            await handle.updateUserCredentialsFor({username, password});
             console.log(handle.userCredentialsFor(Environment.PROD, User.SYSADMIN));
     });
 })();
