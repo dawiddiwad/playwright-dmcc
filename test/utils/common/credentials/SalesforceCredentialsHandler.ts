@@ -26,7 +26,7 @@ export class SalesforceCredentialsHandler extends CredentialsHandler {
 
     public async updateUserCredentialsFor(userCredentials: UserCredentials): Promise<void> {
             try {
-                this.fileConent = this.updatePasswordFor(this.fileConent, userCredentials);
+                this.content = this.updatePasswordFor(this.content, userCredentials);
                 return await this.write();
             } catch(e) {
                 console.error(`unable to update salesforce user credentials due to:\n${(e as Error).stack}`);
@@ -37,8 +37,8 @@ export class SalesforceCredentialsHandler extends CredentialsHandler {
     public userCredentialsFor(environment: Environment, label: User): UserCredentials {
         let matches: number = 0;
         let userCredentials;
-        if(this.fileConent){
-            this.fileConent.environments
+        if(this.content){
+            this.content.environments
                 .forEach(env => {
                     if (env.name === environment){  
                         env.users.forEach(user => {
@@ -61,8 +61,8 @@ export class SalesforceCredentialsHandler extends CredentialsHandler {
     public environmentDataFor(environment: Environment): EnvironmentStructure {
         let matches: number = 0;
         let environmentData: EnvironmentStructure;
-        if(this.fileConent){
-            this.fileConent.environments
+        if(this.content){
+            this.content.environments
                 .forEach(env => {
                     if (env.name === environment){
                         environmentData = env;

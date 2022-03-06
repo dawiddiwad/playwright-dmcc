@@ -2,7 +2,7 @@ import { CredentialsHandler } from "./CredentialsHandler";
 import { GmailCredentailsStructure, schema as gmailCredentialsSchema } from "./structures/GmailCredentialsStructure";
 
 export class GmailCredentialsHandler extends CredentialsHandler {
-    fileConent: GmailCredentailsStructure;
+    content: GmailCredentailsStructure;
 
     constructor(){
         super("./test/config/GmailCredentials.json", gmailCredentialsSchema);
@@ -11,7 +11,7 @@ export class GmailCredentialsHandler extends CredentialsHandler {
     public async updateUsing(credentials: string): Promise<void> {
         try {
             this.validate(credentials);
-            this.fileConent =  credentials as unknown as GmailCredentailsStructure;
+            this.content =  credentials as unknown as GmailCredentailsStructure;
             return this.write()
         } catch (e){
             console.error(`unable to update gmail credentials due to:\n${(e as Error).stack}`);
@@ -20,6 +20,6 @@ export class GmailCredentialsHandler extends CredentialsHandler {
     }
 
     public credentials(): GmailCredentailsStructure {
-        return this.fileConent;
+        return this.content;
     }
 }
