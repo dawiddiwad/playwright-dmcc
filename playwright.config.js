@@ -3,8 +3,8 @@
 /** @type {import('@playwright/test').PlaywrightTestConfig} */
 const config = {
   reporter: [['html', { outputFolder: 'playwright-report' }], ['list']],
-  repeatEach: 6,
-  retries: 2,
+  repeatEach: 1,
+  retries: 0,
   workers: 1,
   use: {
     headless: false,

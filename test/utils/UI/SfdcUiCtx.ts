@@ -3,10 +3,11 @@ import { LoginPage } from "../../locators/sfdc/LoginPage";
 import { CredentialsHandler } from "../Common/CredentialsHandler";
 import { UserCredentials } from "../Common/CredentialsStructure";
 import { Environment } from "../Common/Environment";
+import { SfCredentials } from "../Common/SfCredentials";
 import { User } from "../Common/User";
 
 export class SfdcUiCtx {
-    private credentialsHandler: CredentialsHandler;
+    private credentials: SfCredentials;
 
     public Ready: Promise<SfdcUiCtx>;
     public readonly user: User;
@@ -17,21 +18,21 @@ export class SfdcUiCtx {
         this.environment = environment;
         this.user = user;
         this.Ready = new Promise(async (ready) => {
-            this.credentialsHandler = await new CredentialsHandler().Ready;
+            this.credentials = await new SfCredentials().Ready;
             ready(this);
         })
     }
 
     public async loginOn(page: Page): Promise<void> {
-        const credentials: UserCredentials = await this.credentialsHandler
+        const credentials: UserCredentials = await this.credentials
             .userCredentialsFor(this.environment, this.user);
-        const baseUrl: string = await this.credentialsHandler
+        const baseUrl: string = await this.credentials
             .environmentDataFor(this.environment).baseUrl;
         await LoginPage.authenticateUsing(page, baseUrl, credentials);
     }
 
     public async logoutFrom(page: Page): Promise<void> {
-        const baseUrl: string = await this.credentialsHandler
+        const baseUrl: string = await this.credentials
             .environmentDataFor(this.environment).baseUrl;
         await page.goto(`${baseUrl}/secur/logout.jsp`, { waitUntil: 'networkidle' });
     }

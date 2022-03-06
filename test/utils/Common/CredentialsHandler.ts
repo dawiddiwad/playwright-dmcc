@@ -1,20 +1,22 @@
-import { CredentialsStructure, UserCredentials, Environment as EnvironmentStructure } from "./CredentialsStructure";
-import { writeFile, readFile } from "fs/promises";
-import { User } from "./User";
-import { Environment } from "./Environment";
+import { readFile } from "fs/promises";
+import Ajv from "ajv";
+import console from "console";
 
-export class CredentialsHandler {
-    private credentialsAll?: CredentialsStructure | null;
-    
+export abstract class CredentialsHandler {
+    fileConent;
+    schema;
 
-    public Ready: Promise<CredentialsHandler>;
-    public static readonly CREDENTIALS_FILE_PATH: string = "./test/config/credentials.json";
+    public Ready: Promise<this>;
+    public readonly CREDENTIALS_FILE_PATH: string;
     
-    constructor(){
-        this.Ready = new Promise(async (ready) => {
+    constructor(filePath: string, schema: Object){
+        this.CREDENTIALS_FILE_PATH = filePath;
+        this.schema = schema;
+        this.Ready = new Promise(async (makeReady) => {
             try {
-                this.credentialsAll = await this.allCredentials();
-                ready(this); 
+                this.fileConent = await this.read();
+                this.validate(this.fileConent);
+                makeReady(this); 
             } catch (e) {
                 console.error(`unable to initilazie CredentialsHandler due to:\n${(e as Error).stack}`);
                 process.exit(1);
@@ -22,82 +24,22 @@ export class CredentialsHandler {
         })
     }
 
-    private updatePasswordFor(target: CredentialsStructure, userCredentials: UserCredentials): CredentialsStructure {
-        let matches: number = 0;
-        target.environments.forEach((environment) => {
-            environment.users.forEach((user) => {
-                if (user.credentials.username === userCredentials.username){
-                    user.credentials.password = userCredentials.password;
-                    matches++;
-                }
-            })
-        })
-        if (!matches){
-            throw new Error(`cannot find username ${userCredentials.username}`);
-        } else if (matches > 1){
-            console.trace(`found ${matches} duplicate usernames for: ${userCredentials.username}`);
+    private validate(data: string){
+        if (!this.schema){
+            console.error('file JSON Schema is not set');
         }
-        return target;
+        const validate = new Ajv()
+            .compile(this.schema);
+
+        const valid = validate(data);
+        if (!valid){
+            console.error(validate.errors);
+            process.exit(1);
+        }
     }
 
-    public userCredentialsFor(environment: Environment, label: User): UserCredentials {
-        let matches: number = 0;
-        let userCredentials;
-        if(this.credentialsAll){
-            this.credentialsAll.environments
-                .forEach(env => {
-                    if (env.name === environment){  
-                        env.users.forEach(user => {
-                            if (user.label === label){
-                                userCredentials = user.credentials;
-                                matches++;
-                            }
-                        });
-                    }
-            });
-        }
-        if (!userCredentials){
-            throw new Error(`cannot find any users labeled ${label} on environment ${environment}`);
-        } else if (matches > 1){
-            throw new Error(`found ${matches} duplicate usernames labeled ${label} on environment ${environment}`);
-        }
-        return userCredentials;
-    }
-
-    public environmentDataFor(environment: Environment): EnvironmentStructure {
-        let matches: number = 0;
-        let environmentData: EnvironmentStructure;
-        if(this.credentialsAll){
-            this.credentialsAll.environments
-                .forEach(env => {
-                    if (env.name === environment){
-                        environmentData = env;
-                        matches++;
-                    }
-                });
-        }
-        if (!environmentData){
-            throw new Error(`cannot find any environments named ${environment}`);
-        } else if (matches > 1){
-            throw new Error(`found ${matches} duplicate environments named ${environment}`);
-        }
-        return environmentData;
-    }
-
-    public async allCredentials(): Promise<CredentialsStructure> {
-        this.credentialsAll = JSON.parse((await readFile(CredentialsHandler.CREDENTIALS_FILE_PATH)).toString());
-        return this.credentialsAll ? this.credentialsAll : Promise.reject();
-    }
-
-    public async saveCredentialsToFileFor(userCredentials: UserCredentials): Promise<void> {
-        if (this.credentialsAll){
-            try {
-                this.updatePasswordFor(this.credentialsAll, userCredentials);
-                return await writeFile(CredentialsHandler.CREDENTIALS_FILE_PATH, JSON.stringify(this.credentialsAll, null, 3));
-            } catch(e) {
-                console.error(`unable to write credentials file due to:\n${(e as Error).stack}`);
-                process.exit(1);
-            }
-        }
+    public async read(): Promise<string> {
+        const fileContent: string = JSON.parse((await readFile(this.CREDENTIALS_FILE_PATH)).toString());
+        return fileContent;
     }
 }

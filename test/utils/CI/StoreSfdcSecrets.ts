@@ -1,5 +1,5 @@
-import { CredentialsHandler } from "../Common/CredentialsHandler";
 import { Environment } from "../Common/Environment";
+import { SfCredentials } from "../Common/SfCredentials";
 import { User } from "../Common/User";
 
 (async() => {
@@ -10,7 +10,7 @@ import { User } from "../Common/User";
             username: ${username}
             password: ${password}`);
     }
-    await new CredentialsHandler().Ready
+    await new SfCredentials().Ready
         .then(async handle => {
             await handle.saveCredentialsToFileFor({username, password});
             console.log(handle.userCredentialsFor(Environment.PROD, User.SYSADMIN));
