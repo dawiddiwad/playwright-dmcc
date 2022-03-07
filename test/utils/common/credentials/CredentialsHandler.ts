@@ -3,8 +3,8 @@ import Ajv from "ajv";
 import console from "console";
 
 export abstract class CredentialsHandler {
-    protected content;
-    protected schema;
+    protected content: any;
+    protected schema: any;
     public readonly Ready: Promise<this>;
     public readonly path: string;
     

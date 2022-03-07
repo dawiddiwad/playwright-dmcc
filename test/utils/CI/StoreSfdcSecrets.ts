@@ -1,6 +1,4 @@
-import { Environment } from "../common/credentials/structures/Environment";
 import { SalesforceCredentialsHandler } from "../common/credentials/SalesforceCredentialsHandler";
-import { User } from "../common/credentials/structures/User";
 
 (async() => {
     const username: string = process.argv[2];
@@ -13,6 +11,5 @@ import { User } from "../common/credentials/structures/User";
     await new SalesforceCredentialsHandler().Ready
         .then(async handle => {
             await handle.updateUserCredentialsFor({username, password});
-            console.log(handle.userCredentialsFor(Environment.PROD, User.SYSADMIN));
     });
 })();

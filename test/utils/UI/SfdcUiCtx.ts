@@ -16,9 +16,9 @@ export class SfdcUiCtx {
     constructor(environment: Environment, user: User) {
         this.environment = environment;
         this.user = user;
-        this.Ready = new Promise(async (ready) => {
+        this.Ready = new Promise(async (makeReady) => {
             this.credentials = await new SalesforceCredentialsHandler().Ready;
-            ready(this);
+            makeReady(this);
         })
     }
 

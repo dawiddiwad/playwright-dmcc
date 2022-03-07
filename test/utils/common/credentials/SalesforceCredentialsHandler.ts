@@ -4,7 +4,6 @@ import { Environment } from "./structures/Environment";
 import { User } from "./structures/User";
 
 export class SalesforceCredentialsHandler extends CredentialsHandler {
-
     constructor(){
         super("./test/config/SfCredentials.json", CredentialsStructureSchema);
     }
