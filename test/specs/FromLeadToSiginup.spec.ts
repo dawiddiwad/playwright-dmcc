@@ -70,8 +70,8 @@ test.describe('DMCC demo', () => {
 
         //Signup Password
         await page.goto(await mailer.latestSignupLink());
-        await page.fill(Signup.PASSWORD, 'Qwerty1234$');
-        await page.fill(Signup.PASSWORD_CONFIRM, 'Qwerty1234$');
+        await page.fill(Signup.PASSWORD, Signup.commonPassword());
+        await page.fill(Signup.PASSWORD_CONFIRM, Signup.commonPassword());
         await page.waitForLoadState('networkidle');
         await page.click(Signup.SIGNUP_BUTTON);
 

@@ -7,6 +7,10 @@ export class Signup {
     public static readonly CONTINUE_BUTTON: string = "//button[text()='Continue']";
     public static readonly GO_TO_LOGIN_BUTTON: string = "//button[@name='btnredirectToLogin']";
 
+    public static commonPassword(){
+        return "Qwerty1234$";
+    }
+
     public static async enterOTP(page: Page, code: string): Promise<void> {
         await page.click("//input[@name='inpOtp1']");
         await Array.from(code).forEach(async digit => 
