@@ -1,5 +1,6 @@
 import faker from "@faker-js/faker";
 import test from "@playwright/test";
+import { Signup } from "../locators/portal/Signup";
 import { Lead } from "../locators/sfdc/editview/Lead";
 import { Opportunity } from "../locators/sfdc/editview/Opportunity";
 import { HighlightsPanel } from "../locators/sfdc/HighlightsPanel";
@@ -8,6 +9,7 @@ import { ListView } from "../locators/sfdc/ListView";
 import { Modal } from "../locators/sfdc/Modal";
 import { NavigationBar } from "../locators/sfdc/NavigationBar";
 import { StagesPath } from "../locators/sfdc/StagesPath";
+import { FreezoneMailer } from "../utils/API/gmail/FreezoneMailer";
 import { Environment } from "../utils/common/credentials/structures/Environment";
 import { User } from "../utils/common/credentials/structures/User";
 import { SfdcUiCtx } from "../utils/UI/SfdcUiCtx";
@@ -15,6 +17,7 @@ import { SfdcUiCtx } from "../utils/UI/SfdcUiCtx";
 test.describe('DMCC demo', () => {
     test('Lead to Signup link path', async ({page}) => {
         test.slow();
+        const mailer = await new FreezoneMailer().Ready;
         //Authenticate SFDC sandbox
         const UI: SfdcUiCtx = await new SfdcUiCtx(Environment.QA, User.SYSADMIN).Ready;
         await UI.loginOn(page);
@@ -65,7 +68,19 @@ test.describe('DMCC demo', () => {
         await StagesPath.fillPicklistWithValue(page, "StageName", "Convincing Customer");
         await page.click(StagesPath.DONE_BUTTON);
 
-        //logout from SFDC sanbox
-        await UI.logoutFrom(page);
+        //Signup Password
+        await page.goto(await mailer.latestSignupLink());
+        await page.fill(Signup.PASSWORD, 'Qwerty1234$');
+        await page.fill(Signup.PASSWORD_CONFIRM, 'Qwerty1234$');
+        await page.waitForLoadState('networkidle');
+        await page.click(Signup.SIGNUP_BUTTON);
+
+        //Singup OTP
+        await Signup.enterOTP(page, await mailer.latestSignupCode());
+        await page.click(Signup.CONTINUE_BUTTON);
+        await page.click(Signup.GO_TO_LOGIN_BUTTON);
+
+        //finalize
+        await page.waitForLoadState('networkidle');
     })
 })
