@@ -1,5 +1,9 @@
 import faker from "@faker-js/faker";
 import test from "@playwright/test";
+import { ApplicantDetails } from "../locators/portal/ApplicantDetails";
+import { BeforeStarting } from "../locators/portal/BeforeStarting";
+import { FreezoneLogin } from "../locators/portal/FreezoneLogin";
+import { Home } from "../locators/portal/Home";
 import { Signup } from "../locators/portal/Signup";
 import { Lead } from "../locators/sfdc/editview/Lead";
 import { Opportunity } from "../locators/sfdc/editview/Opportunity";
@@ -70,17 +74,36 @@ test.describe('DMCC demo', () => {
 
         //Signup Password
         await page.goto(await mailer.latestSignupLink());
+        await page.waitForLoadState('networkidle');
         await page.fill(Signup.PASSWORD, Signup.commonPassword());
         await page.fill(Signup.PASSWORD_CONFIRM, Signup.commonPassword());
-        await page.waitForLoadState('networkidle');
         await page.click(Signup.SIGNUP_BUTTON);
 
         //Singup OTP
+        await page.waitForLoadState('networkidle');
         await Signup.enterOTP(page, await mailer.latestSignupCode());
         await page.click(Signup.CONTINUE_BUTTON);
+        await page.waitForLoadState('networkidle');
         await page.click(Signup.GO_TO_LOGIN_BUTTON);
 
-        //finalize
+        //Login to Portal
+        // await page.goto("https://publicis-dmccpoc.cs58.force.com/ncascreenflow");
+        await page.fill(FreezoneLogin.USERNAME, "dmccinboxqa5@gmail.com");
+        await page.fill(FreezoneLogin.PASSWORD, Signup.commonPassword());
+        await page.click(FreezoneLogin.LOGIN_BUTTON);
+
+        //Appflow
+        await page.click(Home.CONTINUE_APPLICATION_BUTTON);
+        await page.click(BeforeStarting.TERMS_AND_CONDITIONS_LINK);
+        await page.click(BeforeStarting.TERMS_AND_CONDITIONS_ACCEPT_BUTTON);
+        await page.click(BeforeStarting.CONTINUE_BUTTON);
+
+        await page.click(ApplicantDetails.CONSULTANT_OPTION_BUTTON);
+        await page.setInputFiles(ApplicantDetails.UPLOAD_LETTER_INPUT, './test/uploads/elephant.jpg');
+        await page.click(ApplicantDetails.UPLOAD_DONE_BUTTON);
+        await page.setInputFiles(ApplicantDetails.UPLOAD_PASSPORT_INPUT, './test/uploads/elephant.jpg');
+        await page.click(ApplicantDetails.UPLOAD_DONE_BUTTON);
+
         await page.waitForLoadState('networkidle');
     })
 })
