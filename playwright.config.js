@@ -6,7 +6,9 @@ const config = {
   retries: 0,
   workers: 1,
   use: {
-    headless: false,
+    channel: 'chrome',
+    headless: true,
+    ignoreHTTPSErrors: true,
     viewport: { width: 1366, height: 768 },
     video: {
       mode: "retain-on-failure",

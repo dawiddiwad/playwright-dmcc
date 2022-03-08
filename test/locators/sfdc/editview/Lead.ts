@@ -15,6 +15,5 @@ export class Lead {
     public static async fillPicklistWithValue(page: Page, picklistLabel: string, picklistValue: string): Promise<void> {
         await page.click(`(//button[ancestor::div[preceding-sibling::label[text()='${picklistLabel}']]])[1]`);
         await page.click(`(//lightning-base-combobox-item[@data-value='${picklistValue}'])[last()]`);
-        await page.waitForLoadState("networkidle");
     }
 }

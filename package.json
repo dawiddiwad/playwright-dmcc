@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "DMCC Freezone test automation framework",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx playwright test",
+    "test-headed": "npx playwright test --headed",
+    "test-cli-debug": "DEBUG=pw:api npx playwright test"
   },
   "author": "Dawid Dobrowolski SoftQA",
   "license": "MIT",

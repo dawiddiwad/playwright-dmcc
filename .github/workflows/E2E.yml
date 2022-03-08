@@ -13,13 +13,13 @@ jobs:
     - name: Install project dependencies
       run: npm install
     - name: Install PW
-      run: npx playwright install   
+      run: npx playwright install chrome   
     - name: prepare credentials
       run: |
         npx ts-node test/utils/CI/StoreSfdcSecrets.ts sys.admin@dmcc.qa ${{ secrets.QA_SYSADMIN_PSWD }}
         npx ts-node test/utils/CI/StoreGmailSecrets.ts ${{ secrets.GMAIL_CREDS }}    
     - name: Run tests
-      run: npx playwright test
+      run: npm run test-cli-debug 
     - uses: actions/upload-artifact@v2
       if: ${{ failure() }}
       with:

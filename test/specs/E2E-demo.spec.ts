@@ -57,7 +57,7 @@ test.describe('DMCC demo - E2E flow', () => {
             await page.fill(Lead.COMPANY, faker.company.companyName());
             await page.fill(Lead.COUNTRY_CODE, faker.datatype.number(100).toString());
             await page.fill(Lead.AREA_CODE, faker.datatype.number(100).toString());
-            await page.fill(Lead.PHONE_NUMBER, faker.phone.phoneNumber());
+            await page.fill(Lead.PHONE_NUMBER, faker.phone.phoneNumber('###-###-###'));
             await page.fill(Lead.DESCRIPTION, "QA automation");
             await page.click(Lead.SAVE_BUTTON);
         });
