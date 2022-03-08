@@ -13,7 +13,8 @@ export class Signup {
 
     public static async enterOTP(page: Page, code: string): Promise<void> {
         await page.click("//input[@name='inpOtp1']");
-        await Array.from(code).forEach(async digit => 
-            await page.keyboard.type(digit));
+        for (const singleDigit of Array.from(code)) {
+            await page.keyboard.type(singleDigit, {delay: 300});
+        }
     }
 }

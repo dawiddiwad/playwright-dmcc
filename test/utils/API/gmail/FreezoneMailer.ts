@@ -1,14 +1,8 @@
 import { GmailCtx, MissingGmailMessageError } from "./GmailCtx";
 
-export class FreezoneMailer {
-    private gmailCtx = new GmailCtx();
-    public readonly Ready: Promise<this>;
-
+export class FreezoneMailer extends GmailCtx {
     constructor(){
-        this.Ready = new Promise(async makeready => {
-            await this.gmailCtx.Ready;
-            makeready(this);
-        })
+        super();
     }
 
     private parse(source: string, pattern: RegExp): string {
@@ -30,13 +24,14 @@ export class FreezoneMailer {
     public async latestSignupCode(): Promise<string> {
         try {
             return this.parseSignupCode(
-                await this.gmailCtx.latestFreezoneSignupCodeMsg());
+                await this.latestFreezoneSignupCodeMsg());
         } catch (error) {
             if (error instanceof MissingGmailMessageError){
-                console.log("no messages yet...");
+                console.log("no OTP messages yet...");
                 return this.latestSignupCode();
             } else {
-                throw error;
+                console.error(`unable to get signup code due to:\n${(error as Error).stack}`);
+                process.exit(1);
             }
         }
     }
@@ -44,13 +39,14 @@ export class FreezoneMailer {
     public async latestSignupLink(): Promise<string> {
         try {
             return this.parseSignupLink(
-                await this.gmailCtx.latestFreezoneSignupLinkMsg());
+                await this.latestFreezoneSignupLinkMsg());
         } catch (error) {
             if (error instanceof MissingGmailMessageError){
-                console.log("no messages yet...");
+                console.log("no signup link messages yet...");
                 return this.latestSignupLink();
             } else {
-                throw error;
+                console.error(`unable to get signup link due to:\n${(error as Error).stack}`);
+                process.exit(1);
             }
         }
     }
