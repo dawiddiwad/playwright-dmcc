@@ -19,8 +19,8 @@ import { User } from "../utils/common/credentials/structures/User";
 import { SfdcUiCtx } from "../utils/UI/SfdcUiCtx";
 
 test.describe('DMCC demo - E2E flow', () => {
-    let mailer;
-    let UI;
+    let mailer: FreezoneMailer;
+    let UI: SfdcUiCtx;
 
     test.describe.configure({ mode: 'serial' });
 
