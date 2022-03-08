@@ -33,7 +33,7 @@ export abstract class CredentialsHandler {
 
         const valid = validate(data);
         if (!valid){
-            throw new Error(`JSON schema validation errors:\n${validate.errors}`);
+            throw new Error(`JSON schema validation errors:\n${JSON.stringify(validate.errors)}`);
         }
     }
 

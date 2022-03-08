@@ -8,6 +8,7 @@ export class GmailCredentialsHandler extends CredentialsHandler {
 
     public async updateUsing(credentials: string): Promise<void> {
         try {
+            credentials = JSON.parse(credentials);
             this.validate(credentials);
             this.content =  <unknown> credentials as GmailCredentailsStructure;
             return this.write()

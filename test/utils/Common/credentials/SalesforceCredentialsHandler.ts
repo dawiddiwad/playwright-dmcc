@@ -14,6 +14,7 @@ export class SalesforceCredentialsHandler extends CredentialsHandler {
             environment.users.forEach((user) => {
                 if (user.credentials.username === userCredentials.username){
                     user.credentials.password = userCredentials.password;
+                    matches++;
                 }
             })
         })
@@ -35,12 +36,12 @@ export class SalesforceCredentialsHandler extends CredentialsHandler {
 
     public userCredentialsFor(environment: Environment, label: User): UserCredentials {
         let matches: number = 0;
-        let userCredentials;
+        let userCredentials: unknown;
         if(this.content){
             this.content.environments
-                .forEach(env => {
+                .forEach((env: any) => {
                     if (env.name === environment){  
-                        env.users.forEach(user => {
+                        env.users.forEach((user: any) => {
                             if (user.label === label){
                                 userCredentials = user.credentials;
                                 matches++;
@@ -49,31 +50,31 @@ export class SalesforceCredentialsHandler extends CredentialsHandler {
                     }
             });
         }
-        if (!userCredentials){
+        if (!matches){
             throw new Error(`cannot find any salesforce users labeled ${label} on environment ${environment}`);
         } else if (matches > 1){
             throw new Error(`found ${matches} duplicate salesforce usernames labeled ${label} on environment ${environment}`);
         }
-        return userCredentials;
+        return userCredentials as UserCredentials;
     }
 
     public environmentDataFor(environment: Environment): EnvironmentStructure {
         let matches: number = 0;
-        let environmentData: EnvironmentStructure;
+        let environmentData: unknown;
         if(this.content){
             this.content.environments
-                .forEach(env => {
+                .forEach((env: any) => {
                     if (env.name === environment){
                         environmentData = env;
                         matches++;
                     }
                 });
         }
-        if (!environmentData){
+        if (!matches){
             throw new Error(`cannot find any salesforce environments named ${environment}`);
         } else if (matches > 1){
             throw new Error(`found ${matches} duplicate salesforce environments named ${environment}`);
         }
-        return environmentData;
+        return environmentData as EnvironmentStructure;
     }
 }
