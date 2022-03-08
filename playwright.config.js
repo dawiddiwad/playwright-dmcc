@@ -9,6 +9,11 @@ const config = {
     channel: 'chrome',
     headless: true,
     ignoreHTTPSErrors: true,
+    trace: {
+      mode: 'retain-on-failure',
+      screenshots: true,
+      snapshots: true
+    },
     viewport: { width: 1366, height: 768 },
     video: {
       mode: "retain-on-failure",

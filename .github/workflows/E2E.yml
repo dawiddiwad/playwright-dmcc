@@ -21,8 +21,7 @@ jobs:
     - name: Run tests
       run: npm run test-cli-debug 
     - uses: actions/upload-artifact@v2
-      if: ${{ failure() }}
       with:
         name: playwright-test-report
-        path: test-results/**
+        path: playwright-report/**
         retention-days: 1
