@@ -14,6 +14,7 @@ import { Modal } from "../locators/sfdc/Modal";
 import { NavigationBar } from "../locators/sfdc/NavigationBar";
 import { StagesPath } from "../locators/sfdc/StagesPath";
 import { FreezoneMailer } from "../utils/API/gmail/FreezoneMailer";
+import { SfdcApiCtx } from "../utils/API/sfdc/SfdcApiCtx";
 import { Environment } from "../utils/common/credentials/structures/Environment";
 import { User } from "../utils/common/credentials/structures/User";
 import { SfdcUiCtx } from "../utils/UI/SfdcUiCtx";
@@ -21,12 +22,14 @@ import { SfdcUiCtx } from "../utils/UI/SfdcUiCtx";
 test.describe('DMCC demo - E2E flow', () => {
     let mailer: FreezoneMailer;
     let UI: SfdcUiCtx;
+    let API: SfdcApiCtx;
 
     test.describe.configure({ mode: 'serial' });
 
     test.beforeAll(async () => {
         mailer = await new FreezoneMailer().Ready;
         UI = await new SfdcUiCtx(Environment.QA, User.SYSADMIN).Ready;
+        API = await new SfdcApiCtx(Environment.QA, User.SYSADMIN).Ready;
     })
 
     test('Create and Convert Lead', async ({page}) => {test.slow();
