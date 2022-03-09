@@ -16,6 +16,13 @@ export class SfdcUiCtx extends SfdcCtx {
         })
     }
 
+    public async navigateToRecord(page: Page, id: string): Promise<void> {
+        const recordUri = await this.credentials
+            .environmentDataFor(this.environment).baseUrl
+            + id;
+        await page.goto(recordUri);
+    }
+
     public async loginOn(page: Page): Promise<void> {
         const credentials: UserCredentials = await this.credentials
             .userCredentialsFor(this.environment, this.user);
