@@ -14,6 +14,7 @@ import { Modal } from "../locators/sfdc/Modal";
 import { NavigationBar } from "../locators/sfdc/NavigationBar";
 import { StagesPath } from "../locators/sfdc/StagesPath";
 import { FreezoneMailer } from "../utils/API/gmail/FreezoneMailer";
+import { SfdcApiCtx } from "../utils/API/sfdc/SfdcApiCtx";
 import { Environment } from "../utils/common/credentials/structures/Environment";
 import { User } from "../utils/common/credentials/structures/User";
 import { SfdcUiCtx } from "../utils/UI/SfdcUiCtx";
@@ -21,12 +22,14 @@ import { SfdcUiCtx } from "../utils/UI/SfdcUiCtx";
 test.describe('DMCC demo - E2E flow', () => {
     let mailer: FreezoneMailer;
     let UI: SfdcUiCtx;
+    let API: SfdcApiCtx;
 
     test.describe.configure({ mode: 'serial' });
 
     test.beforeAll(async () => {
         mailer = await new FreezoneMailer().Ready;
         UI = await new SfdcUiCtx(Environment.QA, User.SYSADMIN).Ready;
+        API = await new SfdcApiCtx(Environment.QA, User.SYSADMIN).Ready;
     })
 
     test('Create and Convert Lead', async ({page}) => {test.slow();
@@ -34,32 +37,12 @@ test.describe('DMCC demo - E2E flow', () => {
             await UI.loginOn(page);
         });
 
-        await test.step('Navigate to Leads listview', async () => {
-            await page.click(NavigationBar.APP_LAUNCHER);
-            await page.fill(NavigationBar.APP_LAUNCHER_SEARCH_FIELD, "Leads");
-            await page.click(NavigationBar.getAppLauncherSearchResultsItemByLabel("Leads"));
+        await test.step('Create new Lead via UI', async () => {
+            await Lead.newByUi(page);
         });
 
-        await test.step('Create new Lead', async () => {
-            await page.click(ListView.NEW_BUTTON);
-            await page.click(Modal.NEXT_BUTTON);
-            await Lead.fillPicklistWithValue(page, "Lead Source", "Web");
-            await Lead.fillPicklistWithValue(page, "Origin Country", "Afghanistan");
-            await Lead.fillPicklistWithValue(page, "Company Type", "New Company");
-            await Lead.fillPicklistWithValue(page, "Activity Type", "Service");
-            await Lead.fillPicklistWithValue(page, "Company Setup", "Immediately");
-            await Lead.fillPicklistWithValue(page, "How did you hear about us (1)", "Advertising / News / Editorial");
-            await Lead.fillPicklistWithValue(page, "How did you hear about us (2)", "Email Advertising");
-            await Lead.fillPicklistWithValue(page, "Address Country", "Afghanistan");
-            await page.fill(Lead.FIRST_NAME, faker.name.firstName());
-            await page.fill(Lead.LAST_NAME, faker.name.lastName());
-            await page.fill(Lead.EMAIL, "dmccinboxqa@gmail.com");
-            await page.fill(Lead.COMPANY, faker.company.companyName());
-            await page.fill(Lead.COUNTRY_CODE, faker.datatype.number(100).toString());
-            await page.fill(Lead.AREA_CODE, faker.datatype.number(100).toString());
-            await page.fill(Lead.PHONE_NUMBER, faker.phone.phoneNumber('###-###-###'));
-            await page.fill(Lead.DESCRIPTION, "QA automation");
-            await page.click(Lead.SAVE_BUTTON);
+        await test.step('Create new Lead via API', async () => {
+            await UI.navigateToRecord(page, await Lead.newByApi(API));
         });
 
         await test.step('Convert Lead', async () => {
